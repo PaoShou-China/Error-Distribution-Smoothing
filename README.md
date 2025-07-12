@@ -17,6 +17,6 @@ This repository contains the code for four experiments related to EDS.
     - `eds.py`: Code for the proposed method (EDS)
     - `SMOGN.py`: Code for the comparison sample management method (SMOGN)
 - `data/processed/` — Generated and processed data used in experiments
-- `data/` — Raw and processed data (not included in the repository)
+- `data/` — Raw and processed data
 
 For more details, please refer to the comments in each script. 
