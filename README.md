@@ -2,7 +2,7 @@
 
 # Error Distribution Smoothing
 
-[Project homepage](./) · [Quick start](#quick-start) · [Repository](https://github.com/PaoShou-China/Error-Distribution-Smoothing)
+[Project homepage](https://paoshou-china.github.io/Error-Distribution-Smoothing/) · [Quick start](#quick-start) · [Repository](https://github.com/PaoShou-China/Error-Distribution-Smoothing)
 
 This repository contains the Error Distribution Smoothing (EDS) data-management implementation and experiments for imbalanced regression. The examples cover synthetic regression, Lorenz-system identification, polar moment of inertia, Cartpole, and Quadcopter tasks.
 
