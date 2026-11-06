@@ -165,3 +165,40 @@ class Buffer:
 
         self._storage[size:required] = data
         self.data = self._storage[:required]
+
+    def error(self, x, y):
+        """Return the Euclidean output prediction error for one sample."""
+        return np.linalg.norm(y - self.predict(x))
+
+    def predict(self, x):
+        """Predict by simplex interpolation, falling back to nearest neighbor."""
+        x = np.asarray(x)
+        simplex_idx = self.tri.find_simplex(x)
+        if simplex_idx == -1:
+            vertex_idx = self.find_nearest_vertex_idx(x)
+            return self.buf_y_train.data[vertex_idx]
+
+        transform = self.tri.transform[simplex_idx]
+        barycentric_pre = transform[:self.x_dim].dot(x - transform[self.x_dim])
+        weights = np.append(barycentric_pre, 1 - barycentric_pre.sum())
+        vertices = self.buf_y_train.data[self.tri.simplices[simplex_idx]]
+        return self.barycentric_interpolation(vertices, weights)
+
+    @staticmethod
+    def barycentric_interpolation(vals, weights):
+        """Return the weighted output value at the simplex vertices."""
+        weights = np.asarray(weights).reshape(-1, 1)
+        return np.sum(vals * weights, axis=0)
+
+    def find_nearest_vertex_idx(self, x):
+        """Return the index of the closest training input."""
+        _, vertex_idx = self.tree.query(np.asarray(x).reshape(1, -1))
+        return int(vertex_idx[0])
+
+    def average_error(self):
+        """Return mean prediction error on the test buffer."""
+        x_test, y_test = self.buf_x_test.data, self.buf_y_test.data
+        if not len(x_test):
+            return float("nan")
+        errors = [self.error(x, y) for x, y in zip(x_test, y_test)]
+        return float(np.mean(errors))
