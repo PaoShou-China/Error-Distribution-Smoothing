@@ -1,23 +1,20 @@
+![Error Distribution Smoothing — representative sample selection](assets/hero.svg)
+
 # Error Distribution Smoothing
 
-This repository contains the Error Distribution Smoothing (EDS) data-management implementation and four groups of experiments for imbalanced regression.
+[Project homepage](./) · [Quick start](#quick-start) · [Repository](https://github.com/PaoShou-China/Error-Distribution-Smoothing)
 
-## Repository map
+This repository contains the Error Distribution Smoothing (EDS) data-management implementation and experiments for imbalanced regression. The examples cover synthetic regression, Lorenz-system identification, polar moment of inertia, Cartpole, and Quadcopter tasks.
 
-- `src/`: shared EDS and SMOGN implementations.
-- `manager.py`, `process.py`: root-level data-management example.
-- `1_Motivation_Example/`: synthetic motivation example and plots.
-- `2_Dynamics_System_Identification/`: Lorenz-system identification examples.
-- `3_Polar_Moment_of_Inertia/`: synthetic image-feature regression example.
-- `4_Real_World_Experiment/4_1_Cartpole/`: Cartpole experiment.
-- `4_Real_World_Experiment/4_2_Quadcopter/`: Quadcopter experiment.
-- `experiments/`: additional experiment and plotting scripts.
+## Core components
 
-Many experiment directories contain their own `manager.py` and `process.py`; run those scripts from their respective directories unless the script explicitly accepts a path.
+- Shared EDS/SMOGN implementations and data-management utilities.
+- Experiment-specific processing scripts and datasets.
+- Regression, system-identification, and plotting examples.
 
-## Requirements
+## Installation
 
-The shared processing examples use NumPy and SciPy. Some experiment scripts also require PyTorch, Matplotlib, scikit-learn, PySINDy, or other packages. Install the packages required by the experiment you intend to run:
+Use a virtual environment and install the shared dependencies:
 
 ```bash
 python -m venv .venv
@@ -27,26 +24,32 @@ python -m pip install -r requirements.txt
 
 On Windows PowerShell, activate with `.venv\\Scripts\\Activate.ps1`.
 
-## Reproduction workflow
+## Quick start
 
-1. Select an experiment directory.
-2. Inspect its script's main block for the configured data paths and parameters.
-3. Run its `process.py` from that directory to generate the managed training set.
-4. Run the experiment's regression/evaluation script, then its plotting script if applicable.
-
-For example:
+Start from a specific experiment directory and follow its local scripts and README/instructions, where present. For example:
 
 ```bash
 cd 1_Motivation_Example
 python process.py
 ```
 
-The experiment scripts currently define many parameters and paths in source; check those before launching. Outputs are generally written relative to the experiment directory.
+The repository contains experiment-specific variants of `manager.py` and `process.py`; inspect each script's input/output paths before running. Some experiments expect data files already included in their `dataset/` folders.
 
-## Data notes
+## Repository map
 
-Datasets are stored as text files within the experiment directories. The repository README and scripts do not consistently identify external dataset sources, licenses, units, or all feature/label schemas. Treat these as undocumented until the corresponding experiment's generation/loading code or accompanying publication establishes them; do not assume a common schema across experiments. Before reusing a dataset, record its source, license, feature/label meaning, units, and train/test split.
+- `src/`: shared EDS and SMOGN implementations.
+- `manager.py`, `process.py`: root-level data-management example.
+- `1_Motivation_Example/`: synthetic motivation example and plots.
+- `2_Dynamics_System_Identification/`: Lorenz-system identification.
+- `3_Polar_Moment_of_Inertia/`: synthetic image-feature regression.
+- `4_Real_World_Experiment/4_1_Cartpole/`: Cartpole example.
+- `4_Real_World_Experiment/4_2_Quadcopter/`: Quadcopter example.
+- `experiments/`: additional experiment and plotting scripts.
 
-## Core API
+## Reproducibility notes
 
-The `Manager` class manages training points using Delaunay triangulation and cKDTree-based operations. The per-experiment `process.py` files show how initial points and subsequent batches are passed into the manager. Refer to those scripts for experiment-specific `delta`, batch size, and initial batch size.
+Run scripts from their documented working directory because some use relative paths. Dataset provenance and feature/label schemas are not consistently recorded in the repository; consult the experiment files and document those details before reusing datasets or comparing results. Seeds and model parameters may be experiment-specific.
+
+## Citation
+
+See the repository's paper/reference information where provided. Please use the final published bibliographic record when citing the method.
