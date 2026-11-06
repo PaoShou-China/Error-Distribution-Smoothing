@@ -51,6 +51,14 @@ The root-level multi-output Manager checks batch dimensions before updating and 
 
 Run each script from its documented working directory and preserve its relative data paths. Dataset provenance, feature/label schemas, seeds and model settings vary across experiments; consult the corresponding files before comparing results.
 
+## Targeted checks
+
+Run the root Manager and buffer regression checks with:
+
+```bash
+python -m unittest discover -s tests
+```
+
 ## Citation
 
 Use the final published bibliographic record from the repository's reference information when citing the method.
