@@ -86,9 +86,6 @@ class Manager:
         - new_x (np.ndarray): New input features, shape (n_samples, x_dim)
         - new_y (np.ndarray): New label values for this dimension, shape (n_samples, )
         """
-        new_x = new_x.reshape(-1, self.x_dim)
-        new_y = new_y.reshape(-1)
-
         new_x = np.asarray(new_x).reshape(-1, self.x_dim)
         new_y = np.asarray(new_y).reshape(-1)
         if new_x.shape[0] != new_y.shape[0]:
