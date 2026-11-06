@@ -122,50 +122,6 @@ class Manager:
             self.buf_y_test.append(new_y[test_mask])
 
         self.tri, self.tree = self.train()
-import numpy as np
-from scipy.spatial import Delaunay, cKDTree
-
-
-class Buffer:
-    """
-    A buffer to store and manage data points.
-    """
-
-    def __init__(self, init_data):
-        """
-        Initialize the buffer with initial data.
-
-        Parameters:
-        - init_data (numpy.ndarray): Initial data to store in the buffer.
-        """
-        self.data = init_data
-        self.dim = init_data.shape[1]
-        # Keep the public data array exact-sized while reserving geometric capacity.
-        self._storage = init_data
-        self._capacity = init_data.shape[0]
-
-    def append(self, data):
-        """
-        Append new data to the buffer.
-
-        Parameters:
-        - data (numpy.ndarray): New data to append.
-        """
-        data = data.reshape(-1, self.dim)
-        size = self.data.shape[0]
-        required = size + data.shape[0]
-        dtype = np.result_type(self._storage.dtype, data.dtype)
-
-        if required > self._capacity or dtype != self._storage.dtype:
-            capacity = max(required, max(1, self._capacity * 2))
-            storage = np.empty((capacity, self.dim), dtype=dtype)
-            storage[:size] = self.data
-            self._storage = storage
-            self._capacity = capacity
-
-        self._storage[size:required] = data
-        self.data = self._storage[:required]
-
     def error(self, x, y):
         """Return the Euclidean output prediction error for one sample."""
         return np.linalg.norm(y - self.predict(x))
@@ -202,3 +158,4 @@ class Buffer:
             return float("nan")
         errors = [self.error(x, y) for x, y in zip(x_test, y_test)]
         return float(np.mean(errors))
+
