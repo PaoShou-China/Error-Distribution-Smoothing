@@ -16,6 +16,9 @@ class Buffer:
         """
         self.data = init_data
         self.dim = init_data.shape[1]
+        # Keep the public data array exact-sized while reserving geometric capacity.
+        self._storage = init_data
+        self._capacity = init_data.shape[0]
 
     def append(self, data):
         """
@@ -25,7 +28,19 @@ class Buffer:
         - data (numpy.ndarray): New data to append.
         """
         data = data.reshape(-1, self.dim)
-        self.data = np.concatenate((self.data, data))
+        size = self.data.shape[0]
+        required = size + data.shape[0]
+        dtype = np.result_type(self._storage.dtype, data.dtype)
+
+        if required > self._capacity or dtype != self._storage.dtype:
+            capacity = max(required, max(1, self._capacity * 2))
+            storage = np.empty((capacity, self.dim), dtype=dtype)
+            storage[:size] = self.data
+            self._storage = storage
+            self._capacity = capacity
+
+        self._storage[size:required] = data
+        self.data = self._storage[:required]
 
 
 class Manager:
