@@ -1,39 +1,19 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 560" role="img" aria-labelledby="title desc">
-<title id="title">EDS interpolation and error-based sample assignment</title>
-<desc id="desc">Training samples define a Delaunay mesh. A candidate point receives a barycentric interpolation prediction; its prediction error is compared with a threshold to assign it to the training or test buffer.</desc>
-<defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0L10 5L0 10z" fill="#39586a"/></marker></defs>
-<rect width="1200" height="560" rx="24" fill="#f6f8f6"/>
-<text x="54" y="56" font-family="Arial,sans-serif" font-size="17" font-weight="700" letter-spacing="2" fill="#506d60">ERROR-THRESHOLD DATA MANAGEMENT</text>
-<g font-family="Arial,sans-serif">
-<rect x="48" y="104" width="402" height="352" rx="14" fill="#fff" stroke="#9aada3" stroke-width="2"/>
-<text x="76" y="139" font-size="18" font-weight="700" fill="#183246">Training set geometry</text>
-<path d="M102 402H402M102 402V176" stroke="#6b7d76" stroke-width="2"/>
-<text x="246" y="438" font-size="14" fill="#586a62">input x₁</text><text x="73" y="288" font-size="14" fill="#586a62" transform="rotate(-90 73 288)">input x₂</text>
-<g fill="none" stroke="#b8c8bf" stroke-width="1.5">
-<path d="M130 355L190 310L226 365Z"/><path d="M190 310L270 285L226 365Z"/><path d="M226 365L270 285L330 342Z"/><path d="M270 285L340 242L330 342Z"/><path d="M340 242L390 198L410 272Z"/><path d="M340 242L410 272L330 342Z"/>
-<path d="M130 355L190 310L148 244Z"/><path d="M190 310L270 285L230 218Z"/><path d="M190 310L148 244L230 218Z"/><path d="M270 285L340 242L286 188Z"/><path d="M270 285L230 218L286 188Z"/><path d="M340 242L390 198L286 188Z"/>
+<title id="title">Error Distribution Smoothing sample assignment</title><desc id="desc">Training inputs define Delaunay simplices. A candidate's output is predicted by barycentric interpolation, or nearest vertex outside the convex hull. Error against the observed output is compared with delta to select training or test buffer.</desc>
+<defs><marker id="arrow" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0 0 9 4.5 0 9z" fill="#173b63"/></marker></defs>
+<rect width="1200" height="560" rx="20" fill="#f6f9fc"/><path d="M42 83H1158" stroke="#d8e2ec"/>
+<text x="54" y="55" font-family="Arial,sans-serif" font-size="15" font-weight="700" letter-spacing="2" fill="#173b63">ERROR-BASED SAMPLE MANAGEMENT · INPUT-SPACE GEOMETRY</text>
+<g font-family="Arial,sans-serif" fill="#122b45">
+<rect x="54" y="131" width="330" height="292" rx="12" fill="#fff" stroke="#9aafc3" stroke-width="2"/><text x="78" y="166" font-size="18" font-weight="700">Training inputs define simplices</text>
+<path d="M105 374H350M105 374V202" stroke="#71869a" stroke-width="1.6"/><text x="215" y="405" font-size="13" fill="#526b84">input x₁</text><text x="82" y="288" font-size="13" fill="#526b84" transform="rotate(-90 82 288)">input x₂</text>
+<g fill="none" stroke="#b6c7d6" stroke-width="1.5"><path d="M125 340 180 288 220 355Z M180 288 254 275 220 355Z M220 355 254 275 316 324Z M254 275 300 224 316 324Z M180 288 160 229 230 211Z M180 288 254 275 230 211Z M254 275 300 224 230 211Z"/></g>
+<g fill="#173b63"><circle cx="125" cy="340" r="5"/><circle cx="180" cy="288" r="5"/><circle cx="220" cy="355" r="5"/><circle cx="254" cy="275" r="5"/><circle cx="316" cy="324" r="5"/><circle cx="300" cy="224" r="5"/><circle cx="160" cy="229" r="5"/><circle cx="230" cy="211" r="5"/></g>
+<path d="M273 296 254 275 316 324Z" fill="#dce8f2" stroke="#597b9e" stroke-width="2"/><path d="m273 288 8 8-8 8-8-8z" fill="#b32635"/><text x="285" y="286" font-size="13" fill="#b32635">candidate x</text>
+<rect x="457" y="190" width="260" height="136" rx="12" fill="#eaf1f8" stroke="#597b9e" stroke-width="2"/><text x="587" y="228" text-anchor="middle" font-size="18" font-weight="700">Predict output ŷ(x)</text><text x="587" y="266" text-anchor="middle" font-size="15">barycentric interpolation</text><text x="587" y="294" text-anchor="middle" font-size="14" fill="#526b84">nearest vertex outside hull</text>
+<rect x="788" y="190" width="350" height="136" rx="12" fill="#fff" stroke="#9aafc3" stroke-width="2"/><text x="963" y="228" text-anchor="middle" font-size="18" font-weight="700">Compute prediction error</text><text x="963" y="268" text-anchor="middle" font-size="18">e = |y − ŷ(x)|</text><text x="963" y="296" text-anchor="middle" font-size="14" fill="#526b84">compare with configured threshold δ</text>
+<rect x="790" y="381" width="158" height="72" rx="10" fill="#eaf1f8" stroke="#597b9e" stroke-width="2"/><text x="869" y="410" text-anchor="middle" font-size="16" font-weight="700">e &gt; δ</text><text x="869" y="435" text-anchor="middle" font-size="14">training buffer</text>
+<rect x="978" y="381" width="158" height="72" rx="10" fill="#fff" stroke="#9aafc3" stroke-width="2"/><text x="1057" y="410" text-anchor="middle" font-size="16" font-weight="700">e ≤ δ</text><text x="1057" y="435" text-anchor="middle" font-size="14">test buffer</text>
 </g>
-<g fill="#287d75"><circle cx="130" cy="355" r="6"/><circle cx="190" cy="310" r="6"/><circle cx="226" cy="365" r="6"/><circle cx="270" cy="285" r="6"/><circle cx="330" cy="342" r="6"/><circle cx="340" cy="242" r="6"/><circle cx="390" cy="198" r="6"/><circle cx="148" cy="244" r="6"/><circle cx="230" cy="218" r="6"/><circle cx="286" cy="188" r="6"/><circle cx="410" cy="272" r="6"/></g>
-<path d="M308 302L270 285L330 342Z" fill="#d8eee6" fill-opacity=".8" stroke="#75a98e" stroke-width="2"/>
-<path d="M308 302L270 285M308 302L330 342" stroke="#c7833f" stroke-width="2" stroke-dasharray="4 4"/>
-<path d="M308 294l8 8-8 8-8-8z" fill="#e19a4d" stroke="#8e5922" stroke-width="2"/>
-<text x="318" y="297" font-size="13" fill="#7c511f">candidate x</text>
-<text x="77" y="424" font-size="13" fill="#506d60">vertices: training inputs</text>
-<rect x="480" y="178" width="274" height="152" rx="14" fill="#edf3f5" stroke="#7894a0" stroke-width="2"/>
-<text x="617" y="216" text-anchor="middle" font-size="18" font-weight="700" fill="#183246">Predict at candidate</text>
-<text x="617" y="255" text-anchor="middle" font-size="18" fill="#183246">barycentric interpolation</text>
-<text x="617" y="291" text-anchor="middle" font-size="17" fill="#506d60">nearest vertex outside hull</text>
-<rect x="820" y="178" width="316" height="152" rx="14" fill="#fff7e9" stroke="#c19356" stroke-width="2"/>
-<text x="978" y="216" text-anchor="middle" font-size="18" font-weight="700" fill="#183246">Prediction error</text>
-<text x="978" y="255" text-anchor="middle" font-size="18" fill="#183246">‖y − ŷ(x)‖ compared with δ</text>
-<text x="978" y="291" text-anchor="middle" font-size="16" fill="#506d60">δ is the configured threshold</text>
-<rect x="820" y="380" width="146" height="76" rx="12" fill="#e5f2ed" stroke="#5f9683" stroke-width="2"/>
-<text x="893" y="411" text-anchor="middle" font-size="16" font-weight="700" fill="#183246">error ≤ δ</text><text x="893" y="436" text-anchor="middle" font-size="14" fill="#506d60">test buffer</text>
-<rect x="990" y="380" width="146" height="76" rx="12" fill="#e7eff5" stroke="#6e8da4" stroke-width="2"/>
-<text x="1063" y="411" text-anchor="middle" font-size="16" font-weight="700" fill="#183246">error &gt; δ</text><text x="1063" y="436" text-anchor="middle" font-size="14" fill="#506d60">training buffer</text>
-</g>
-<path d="M450 263H478" stroke="#39586a" stroke-width="2.5" marker-end="url(#arrow)"/>
-<path d="M754 254H818" stroke="#39586a" stroke-width="2.5" marker-end="url(#arrow)"/>
-<path d="M978 330V356H893V378M978 356H1063V378" fill="none" stroke="#39586a" stroke-width="2.5" marker-end="url(#arrow)"/>
-<text x="600" y="510" text-anchor="middle" font-family="Arial,sans-serif" font-size="16" fill="#506d60">Delaunay triangulation and cKDTree support input-space prediction and sample management.</text>
-</svg>
+<g fill="none" stroke="#173b63" stroke-width="2.4" marker-end="url(#arrow)"><path d="M384 262H455"/><path d="M717 258H786"/><path d="M963 326V354H869V379"/><path d="M963 354H1057V379"/></g>
+<circle cx="963" cy="354" r="5" fill="#b32635"/>
+<text x="600" y="500" text-anchor="middle" font-family="Arial,sans-serif" font-size="15" fill="#526b84">The code rebuilds Delaunay triangulation and cKDTree after each incoming batch.</text></svg>
