@@ -89,6 +89,118 @@ class Manager:
         new_x = new_x.reshape(-1, self.x_dim)
         new_y = new_y.reshape(-1)
 
+        new_x = np.asarray(new_x).reshape(-1, self.x_dim)
+        new_y = np.asarray(new_y).reshape(-1)
+        if new_x.shape[0] != new_y.shape[0]:
+            raise ValueError("new_x and new_y must contain the same number of samples")
+        if not new_x.shape[0]:
+            return
+
+        self.buf_x_total.append(new_x)
+        self.buf_y_total.append(new_y.reshape(-1, 1))
+        errors = np.asarray([self.error(x, y) for x, y in zip(new_x, new_y)])
+        train_mask = errors > self.delta
+        test_mask = ~train_mask
+
+        if np.any(train_mask):
+            self.buf_x_train.append(new_x[train_mask])
+            self.buf_y_train.append(new_y[train_mask, None])
+        if np.any(test_mask):
+            self.buf_x_test.append(new_x[test_mask])
+            self.buf_y_test.append(new_y[test_mask, None])
+
+        self.tri, self.tree = self.train()
+import numpy as np
+from scipy.spatial import Delaunay, cKDTree
+from pathlib import Path
+
+
+class Buffer:
+    def __init__(self, init_data):
+        """
+        Initialize buffer to store data.
+
+        Parameters:
+        - init_data (np.ndarray): Initial data, shape (n_samples, dim)
+        """
+        self.data = init_data
+        self.dim = init_data.shape[1]
+        # Keep the public data array exact-sized while reserving geometric capacity.
+        self._storage = init_data
+        self._capacity = init_data.shape[0]
+
+    def append(self, data):
+        """
+        Append new data to the buffer.
+
+        Parameters:
+        - data (np.ndarray): New data, shape (n_samples, dim)
+        """
+        data = data.reshape(-1, self.dim)
+        size = self.data.shape[0]
+        required = size + data.shape[0]
+        dtype = np.result_type(self._storage.dtype, data.dtype)
+
+        if required > self._capacity or dtype != self._storage.dtype:
+            capacity = max(required, max(1, self._capacity * 2))
+            storage = np.empty((capacity, self.dim), dtype=dtype)
+            storage[:size] = self.data
+            self._storage = storage
+            self._capacity = capacity
+
+        self._storage[size:required] = data
+        self.data = self._storage[:required]
+
+
+class Manager:
+    def __init__(self, x_init, y_init, delta):
+        """
+        Initialize manager for a single label dimension.
+
+        Parameters:
+        - x_init (np.ndarray): Initial input features, shape (n_samples, x_dim)
+        - y_init (np.ndarray): Initial labels for one dimension, shape (n_samples, )
+        - delta (float): Threshold for adding new data to training set
+        """
+        assert x_init.shape[0] == y_init.shape[0], "Mismatch between x and y samples"
+        assert x_init.shape[0] >= x_init.shape[1] + 3, "Not enough data for Delaunay triangulation"
+        assert delta > 0, "Delta must be positive"
+
+        self.x_dim = x_init.shape[1]
+        self.delta = delta
+
+        # Initialize buffers
+        self.buf_x_total = Buffer(x_init)
+        self.buf_y_total = Buffer(y_init.reshape(-1, 1))
+
+        # Train/test split
+        self.buf_x_train = Buffer(x_init[1:])
+        self.buf_y_train = Buffer(y_init[1:].reshape(-1, 1))
+        self.buf_x_test = Buffer(x_init[:1])
+        self.buf_y_test = Buffer(y_init[:1].reshape(-1, 1))
+
+        # Build Delaunay triangulation and KDTree
+        self.tri, self.tree = self.train()
+
+    def train(self):
+        """
+        Build Delaunay triangulation and KDTree from training data.
+        """
+        tri = Delaunay(self.buf_x_train.data)
+        tree = cKDTree(self.buf_x_train.data)
+        return tri, tree
+
+    def update(self, new_x, new_y):
+        """
+        Update data and decide whether to add to training or test set.
+
+        Parameters:
+        - new_x (np.ndarray): New input features, shape (n_samples, x_dim)
+        - new_y (np.ndarray): New label values for this dimension, shape (n_samples, )
+        """
+        new_x = new_x.reshape(-1, self.x_dim)
+        new_y = new_y.reshape(-1)
+
         self.buf_x_total.append(new_x)
         self.buf_y_total.append(new_y.reshape(-1, 1))
 
