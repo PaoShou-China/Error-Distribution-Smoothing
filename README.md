@@ -45,6 +45,8 @@ The shared implementation's root example is also available through `process.py`;
 - `4_Real_World_Experiment/4_2_Quadcopter/`: Quadcopter example.
 - `experiments/`: additional experiment and plotting scripts.
 
+The root-level multi-output Manager checks batch dimensions before updating and appends selected rows in batches. The shared single-target implementation is in `src/eds.py`; it preserves its own scalar-output error rule. These two implementations are kept separate because their output shapes and error metrics differ.
+
 ## Reproducibility
 
 Run each script from its documented working directory and preserve its relative data paths. Dataset provenance, feature/label schemas, seeds and model settings vary across experiments; consult the corresponding files before comparing results.
