@@ -1,20 +1,18 @@
-![Error Distribution Smoothing — representative sample selection](assets/hero.svg)
+![EDS interpolation and error-based sample assignment](assets/hero.svg)
 
 # Error Distribution Smoothing
 
-[Project homepage](https://paoshou-china.github.io/Error-Distribution-Smoothing/) · [Quick start](#quick-start) · [Repository](https://github.com/PaoShou-China/Error-Distribution-Smoothing)
+[Project homepage](https://paoshou-china.github.io/Error-Distribution-Smoothing/) · [Quick start](#quick-start) · [Source](https://github.com/PaoShou-China/Error-Distribution-Smoothing)
 
-This repository contains the Error Distribution Smoothing (EDS) data-management implementation and experiments for imbalanced regression. The examples cover synthetic regression, Lorenz-system identification, polar moment of inertia, Cartpole, and Quadcopter tasks.
+This repository contains Error Distribution Smoothing (EDS) data-management code and experiment implementations for imbalanced regression and system identification. The included examples cover synthetic regression, Lorenz dynamics, polar moment of inertia, Cartpole and Quadcopter tasks. Experiment variants are maintained in separate directories.
 
-## Core components
+## Method and code
 
-- Shared EDS/SMOGN implementations and data-management utilities.
-- Experiment-specific processing scripts and datasets.
-- Regression, system-identification, and plotting examples.
+The shared `src/eds.py` Manager predicts new outputs from the current training set. It uses barycentric interpolation inside the Delaunay convex hull and nearest-vertex prediction outside it. The absolute prediction error is compared with the configured threshold `delta`: values above the threshold enter the training buffer; the rest enter the test buffer. The triangulation and KDTree are rebuilt after each incoming batch.
+
+The repository also includes SMOGN implementations and experiment-specific managers, processing scripts, datasets and plots. These scripts have their own input/output paths and may differ from the shared implementation.
 
 ## Installation
-
-Use a virtual environment and install the shared dependencies:
 
 ```bash
 python -m venv .venv
@@ -26,30 +24,31 @@ On Windows PowerShell, activate with `.venv\\Scripts\\Activate.ps1`.
 
 ## Quick start
 
-Start from a specific experiment directory and follow its local scripts and README/instructions, where present. For example:
+Run an experiment from its own directory. For example, the motivation example includes its processing script and data:
 
 ```bash
 cd 1_Motivation_Example
 python process.py
 ```
 
-The repository contains experiment-specific variants of `manager.py` and `process.py`; inspect each script's input/output paths before running. Some experiments expect data files already included in their `dataset/` folders.
+The shared implementation's root example is also available through `process.py`; inspect its configured paths and parameters before running. Scripts use relative paths, and some experiments expect data files to be present in their dataset folders.
 
 ## Repository map
 
-- `src/`: shared EDS and SMOGN implementations.
-- `manager.py`, `process.py`: root-level data-management example.
-- `1_Motivation_Example/`: synthetic motivation example and plots.
+- `src/eds.py`: shared single-output EDS Manager and data-processing example.
+- `src/`: shared method and resampling implementations.
+- `manager.py`, `process.py`: root multi-output data-management example.
+- `1_Motivation_Example/`: synthetic motivation example.
 - `2_Dynamics_System_Identification/`: Lorenz-system identification.
 - `3_Polar_Moment_of_Inertia/`: synthetic image-feature regression.
 - `4_Real_World_Experiment/4_1_Cartpole/`: Cartpole example.
 - `4_Real_World_Experiment/4_2_Quadcopter/`: Quadcopter example.
 - `experiments/`: additional experiment and plotting scripts.
 
-## Reproducibility notes
+## Reproducibility
 
-Run scripts from their documented working directory because some use relative paths. Dataset provenance and feature/label schemas are not consistently recorded in the repository; consult the experiment files and document those details before reusing datasets or comparing results. Seeds and model parameters may be experiment-specific.
+Run each script from its documented working directory and preserve its relative data paths. Dataset provenance, feature/label schemas, seeds and model settings vary across experiments; consult the corresponding files before comparing results.
 
 ## Citation
 
-See the repository's paper/reference information where provided. Please use the final published bibliographic record when citing the method.
+Use the final published bibliographic record from the repository's reference information when citing the method.
